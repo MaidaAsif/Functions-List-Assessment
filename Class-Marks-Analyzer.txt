@@ -1,0 +1,52 @@
+# class_marks_analyzer.py
+def get_valid_mark(name):
+    # Ask for marks until a number from 0 to 100 is entered.
+    while True:
+        try:
+            mark = float(input(f"Marks for {name} (0-100): "))
+            if 0 <= mark <= 100:
+                return mark
+        except ValueError:
+            pass
+        print("Invalid marks. Try again.")
+
+
+def students_with_mark(names, marks, target):
+    # Return the names of students who scored the target mark.
+    return [n for n, m in zip(names, marks) if m == target]
+
+
+count = input("Number of students: ")
+while not (count.isdigit() and int(count) > 0):
+    count = input("Enter a positive whole number: ")
+
+student_names = []
+student_marks = []
+
+for i in range(1, int(count) + 1):
+    name = input(f"\nName of student {i}: ").strip().title() or f"Student {i}"
+    student_names.append(name)
+    student_marks.append(get_valid_mark(name))
+
+average = sum(student_marks) / len(student_marks)
+highest = max(student_marks)
+lowest = min(student_marks)
+passed = sum(1 for m in student_marks if m >= 50)
+
+print("\n===== CLASS ANALYSIS =====")
+print(f"Average: {average:.2f}")
+print(f"Highest: {highest:g} - {', '.join(students_with_mark(student_names, student_marks, highest))}")
+print(f"Lowest:  {lowest:g} - {', '.join(students_with_mark(student_names, student_marks, lowest))}")
+print(f"Passed: {passed} | Failed: {len(student_marks) - passed}")
+
+print("\nAbove average:")
+above = [(n, m) for n, m in zip(student_names, student_marks) if m > average]
+for n, m in above:
+    print(f"  {n}: {m:g}")
+if not above:
+    print("  None")
+
+print("\nRanking (highest to lowest):")
+ranked = sorted(zip(student_names, student_marks), key=lambda p: p[1], reverse=True)
+for rank, (n, m) in enumerate(ranked, 1):
+    print(f"  {rank}. {n}: {m:g}")

@@ -1,0 +1,72 @@
+# result_card_generator.py
+SUBJECTS = ["English", "Math", "Physics", "Chemistry", "Computer"]
+
+
+def get_valid_marks(subject):
+    # Ask for marks until a number from 0 to 100 is entered.
+    while True:
+        try:
+            marks = float(input(f"Marks in {subject} (0-100): "))
+            if 0 <= marks <= 100:
+                return marks
+        except ValueError:
+            pass
+        print("Invalid marks. Try again.")
+
+
+def calculate_percentage(total, max_total):
+    # Return the percentage obtained.
+    return total / max_total * 100
+
+
+def get_grade(percentage):
+    # Return the letter grade for a percentage.
+    if percentage >= 90:
+        return "A+"
+    elif percentage >= 80:
+        return "A"
+    elif percentage >= 70:
+        return "B"
+    elif percentage >= 60:
+        return "C"
+    elif percentage >= 50:
+        return "D"
+    return "Fail"
+
+
+def format_name(name):
+    # Remove extra spaces and capitalise each word.
+    return name.strip().title()
+
+
+name = format_name(input("Student name: "))
+while not name:
+    name = format_name(input("Name cannot be empty. Student name: "))
+
+roll_no = input("Roll number: ").strip()
+while not roll_no.isdigit():
+    roll_no = input("Digits only. Roll number: ").strip()
+
+marks = [get_valid_marks(subject) for subject in SUBJECTS]
+total = sum(marks)
+percentage = calculate_percentage(total, len(SUBJECTS) * 100)
+grade = get_grade(percentage)
+
+# Any subject below 40 means Fail, whatever the percentage is
+if min(marks) < 40:
+    grade = "Fail"
+status = "Fail" if grade == "Fail" else "Pass"
+
+print("\n" + "=" * 32)
+print(f"{'RESULT CARD':^32}")
+print("=" * 32)
+print(f"Name: {name}\nRoll No: {roll_no}")
+print("-" * 32)
+for subject, mark in zip(SUBJECTS, marks):
+    print(f"{subject:<18}{mark:>6g}/100")
+print("-" * 32)
+print(f"Total:      {total:g}/{len(SUBJECTS) * 100}")
+print(f"Percentage: {percentage:.2f}%")
+print(f"Grade:      {grade}")
+print(f"Status:     {status}")
+print("=" * 32)
